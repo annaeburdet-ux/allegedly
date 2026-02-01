@@ -30,6 +30,24 @@
       --speed: 520ms;
     }
 
+    .hat-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;      /* use contain if you want full hat visible */
+  object-position:center;
+  opacity:0;
+  transform: scale(1.01);
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.hat-image.loaded{
+  opacity:1;
+  transform: scale(1);
+}
+
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -589,7 +607,9 @@
         <aside class="card product fade-up" style="animation-delay: 180ms;">
           <div class="product-visual" aria-hidden="true">
             <div class="badge">DROP 01</div>
+            <img id="hatImage" class="hat-image" src="assets/hat-stone.jpg" alt="ALLEGEDLY Cashmere Hat - Stone">
           </div>
+
 
           <div class="drop">
             <div class="drop-title">
@@ -778,12 +798,29 @@
       "Charcoal": "Stock: limited"
     };
 
+    const hatSrcByColor = {
+  "Stone": "assets/hat-stone.jpg",
+  "Taupe": "assets/hat-taupe.jpg",
+  "Espresso": "assets/hat-espresso.jpg",
+  "Charcoal": "assets/hat-charcoal.jpg"
+};
+
+const hatImage = document.getElementById("hatImage");
+
+// fade-in once loaded
+hatImage.addEventListener("load", () => hatImage.classList.add("loaded"));
+
+
     chips.forEach(chip => {
       chip.addEventListener("click", () => {
         chips.forEach(c => c.classList.remove("active"));
         chip.classList.add("active");
         const color = chip.getAttribute("data-color") || "Stone";
         stockLine.textContent = stockByColor[color] || "Stock: unconfirmed";
+        // swap image
+        hatImage.classList.remove("loaded");
+        hatImage.src = hatSrcByColor[color] || hatSrcByColor["Stone"];
+        hatImage.alt = `ALLEGEDLY Cashmere Hat - ${color}`;
       });
     });
 
